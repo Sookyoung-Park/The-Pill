@@ -3,8 +3,9 @@ import { colors } from "../config/theme";
 import { ThemeContext } from "../context/ThemeContext";
 import { View, ScrollView, RefreshControl } from "react-native";
 import { StyleSheet } from "react-native";
-import CategoryTabSection from "../components/sections/CategoryTabSection";
-import FeaturedItemsSection from "../components/sections/FeaturedItemsSection";
+// import CategoryTabSection from "../components/sections/CategoryTabSection";
+import Takethepillin from "../components/sections/Takethepillin";
+import Timer from "../components/content/Timer";
 import HorizontalDealsSection from "../components/sections/HorizontalDealsSection";
 
 const HomeScreens = () => {
@@ -37,7 +38,7 @@ const HomeScreens = () => {
       }
     >
       <View style={{ flexGrow: 1 }}>
-        <ScrollView>
+        {/* <ScrollView>
           <View
             style={{
               flexDirection: "row",
@@ -47,8 +48,9 @@ const HomeScreens = () => {
           ></View>
 
           <CategoryTabSection />
-        </ScrollView>
-        <FeaturedItemsSection />
+        </ScrollView> */}
+        <Takethepillin />
+        <Timer/>
         <ScrollView>
           <View
             style={{

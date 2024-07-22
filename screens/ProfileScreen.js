@@ -5,7 +5,7 @@ import { colors } from "../config/theme";
 import { ThemeContext } from "../context/ThemeContext";
 import { useContext } from "react";
 
-const CartScreen = () => {
+const ProfileScreen = () => {
   const { theme } = useContext(ThemeContext);
   let activeColors = colors[theme.mode];
   const navigation = useNavigation();
@@ -52,4 +52,4 @@ const CartScreen = () => {
   );
 };
 
-export default CartScreen;
+export default ProfileScreen;

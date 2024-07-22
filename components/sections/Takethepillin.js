@@ -1,17 +1,17 @@
 import React, { useContext } from "react";
 import { View, Text } from "react-native";
-import FeaturedCardComponent from "../cards/FeaturedCardComponent";
+// import FeaturedCardComponent from "../cards/FeaturedCardComponent";
 import { colors } from "../../config/theme";
 import { ThemeContext } from "../../context/ThemeContext";
 
-const images = [
-  require("../../images/sample_image_1.jpg"),
-  require("../../images/sample_image_2.jpg"),
-  require("../../images/sample_image_3.jpg"),
-  require("../../images/sample_image_4.jpg"),
-];
+// const images = [
+//   require("../../images/sample_image_1.jpg"),
+//   require("../../images/sample_image_2.jpg"),
+//   require("../../images/sample_image_3.jpg"),
+//   require("../../images/sample_image_4.jpg"),
+// ];
 
-const FeaturedItemsSection = () => {
+const Takethepillin = () => {
   const { theme } = useContext(ThemeContext);
   let activeColors = colors[theme.mode];
 
@@ -21,15 +21,16 @@ const FeaturedItemsSection = () => {
         style={{
           fontSize: 24,
           fontWeight: "bold",
-          paddingHorizontal: 10,
-          marginTop: 20,
-          marginBottom: 15,
+          alignSelf:"center",
+          marginTop: 48,
+          marginBottom: 32,
           color: activeColors.text,
         }}
       >
-        Featured Items
+        Take the pill in
       </Text>
-      <View style={{ flexDirection: "column", paddingHorizontal: 10 }}>
+
+      {/* <View style={{ flexDirection: "column", paddingHorizontal: 10 }}>
         {[...Array(2)].map((_, rowIndex) => (
           <View
             key={rowIndex}
@@ -48,9 +49,9 @@ const FeaturedItemsSection = () => {
             ))}
           </View>
         ))}
-      </View>
+      </View> */}
     </View>
   );
 };
 
-export default FeaturedItemsSection;
+export default Takethepillin;

@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
-import SettingsScreen from "../screens/Settings";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../config/theme";
 import { ThemeContext } from "../context/ThemeContext";
-import CartScreen from "../screens/CartScreen";
+import ProfileScreen from "../screens/ProfileScreen";
 import HomeScreen from "../screens/HomeScreen";
+import SettingsScreen from "../screens/Settings";
 
 const Tab = createBottomTabNavigator();
 
@@ -25,11 +25,13 @@ export default function Footer() {
           if (route.name === "Home") {
             iconName = focused ? "home" : "home-outline";
             return <Ionicons name={iconName} size={24} color={color} />;
-          } else if (route.name === "Settings") {
+          } 
+          else if (route.name === "Settings") {
             iconName = focused ? "settings" : "settings-outline";
             return <Ionicons name={iconName} size={24} color={color} />;
-          } else if (route.name === "Cart") {
-            iconName = focused ? "cart" : "cart-outline";
+          } 
+          else if (route.name ==="Profile"){
+            iconName = focused ? "person" : "person-outline";
             return <Ionicons name={iconName} size={24} color={color} />;
           }
 
@@ -39,22 +41,22 @@ export default function Footer() {
         tabBarActiveTintColor: activeColors.accent,
         tabBarInactiveTintColor: activeColors.tertiary,
         tabBarStyle: {
-          backgroundColor: activeColors.secondary,
+          backgroundColor: activeColors.primary,
         },
-        headerTitleAlign: "left",
+        headerTitleAlign: "center",
         headerTitleStyle: {
-          paddingLeft: 10,
-          fontSize: 24,
+          fontSize: 20,
         },
         headerStyle: {
-          backgroundColor: activeColors.secondary,
+          backgroundColor: activeColors.primary,
         },
         headerTintColor: activeColors.tint,
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Cart" component={CartScreen} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
+      
     </Tab.Navigator>
   );
 }
