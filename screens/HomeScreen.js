@@ -1,12 +1,11 @@
 import React, { useContext, useState, useRef } from "react";
 import { colors } from "../config/theme";
 import { ThemeContext } from "../context/ThemeContext";
-import { View, ScrollView, RefreshControl } from "react-native";
+import { View, Text, ScrollView, RefreshControl } from "react-native";
 import { StyleSheet } from "react-native";
-// import CategoryTabSection from "../components/sections/CategoryTabSection";
 import Takethepillin from "../components/sections/Takethepillin";
 import Timer from "../components/content/Timer";
-import HorizontalDealsSection from "../components/sections/HorizontalDealsSection";
+import MainCalendar from "../components/content/MainCalendar";
 
 const HomeScreens = () => {
   const { theme } = useContext(ThemeContext);
@@ -38,17 +37,6 @@ const HomeScreens = () => {
       }
     >
       <View style={{ flexGrow: 1 }}>
-        {/* <ScrollView>
-          <View
-            style={{
-              flexDirection: "row",
-              marginTop: 10,
-              paddingHorizontal: 10,
-            }}
-          ></View>
-
-          <CategoryTabSection />
-        </ScrollView> */}
         <Takethepillin />
         <Timer/>
         <ScrollView>
@@ -60,7 +48,20 @@ const HomeScreens = () => {
             }}
           ></View>
 
-          <HorizontalDealsSection />
+          <View>
+              <View
+                style={{
+                  paddingHorizontal: 10,
+                  marginTop: 60,
+                  marginBottom: 15,
+                  color: activeColors.text,
+                }}
+              />
+              <MainCalendar/>
+            </View>
+          
+
+
         </ScrollView>
       </View>
     </ScrollView>
