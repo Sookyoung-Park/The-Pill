@@ -2,7 +2,6 @@ import {
   View,
   TouchableOpacity,
   StyleSheet,
-  Switch,
   ScrollView,
   Appearance,
 } from "react-native";
@@ -46,41 +45,56 @@ const SettingsScreen = ({ navigation }) => {
       showsHorizontalScrollIndicator={false}
     >
       <StyledText style={{ color: activeColors.accent }} bold>
-        User
+        Contraception
       </StyledText>
 
       <View style={styles.section}>
         <SettingsItem label="Name">
           <StyledText>Maro</StyledText>
-        </SettingsItem>
-        <SettingsItem label="Joined On">
-          <StyledText>02/12/2022</StyledText>
+          <StyledText>Maro</StyledText>
+          <StyledText>Maro</StyledText>
         </SettingsItem>
       </View>
 
       <StyledText style={{ color: activeColors.accent }} bold>
-        Theme Switch
+        Days
       </StyledText>
 
       <View style={styles.section}>
-        <SettingsItem label="Dark Mode">
-          <Switch
-            value={isDarkTheme}
-            onValueChange={toggleTheme}
-            thumbColor={isDarkTheme ? "#fff" : activeColors.tertiary}
-            ios_backgroundColor={activeColors.primary}
-            trackColor={{
-              false: activeColors.primary,
-              true: activeColors.accent,
-            }}
-          ></Switch>
+        <SettingsItem label="Active Pills">
+          <StyledText>21 days</StyledText>
+        </SettingsItem>
+        <SettingsItem label="Do you take Placebo/Sugar Pills?">
+          <StyledText>No</StyledText>
+        </SettingsItem>
+        <SettingsItem label="Placeo/sugar Pills">
+          <StyledText>7 days</StyledText>
+        </SettingsItem>
+        <SettingsItem label="Start Date">
+          <StyledText>October 31th, 2024</StyledText>
         </SettingsItem>
       </View>
+
+
+
+      <StyledText style={{ color: activeColors.accent }} bold>
+        Reminder
+      </StyledText>
+
+      <View style={styles.section}>
+        <SettingsItem label="Push Notification Reminder">
+          <StyledText>Yes</StyledText>
+        </SettingsItem>
+        <SettingsItem label="Reminder Time">
+          <StyledText>2:30pm</StyledText>
+        </SettingsItem>
+      </View>
+      
       <View style={styles.logout}>
         <TouchableOpacity onPress={() => navigation.navigate("Login")}>
           <SettingsItem>
             <Ionicons name="log-out-outline" size={24} color="red" />
-            <StyledText style={{ color: "red" }}> Logout</StyledText>
+            <StyledText style={{ color: "red" }}> TEST TO START PAGE</StyledText>
           </SettingsItem>
         </TouchableOpacity>
       </View>
@@ -101,7 +115,7 @@ const styles = StyleSheet.create({
   },
   logout: {
     bottom: 0,
-    position: "absolute",
+    // position: "absolute",
     borderRadius: 30,
     overflow: "hidden",
     marginTop: 25,

@@ -5,6 +5,10 @@ import { colors } from "../config/theme";
 import { ThemeContext } from "../context/ThemeContext";
 import { useContext } from "react";
 
+import ExpandableList from "../components/content/ExplandableList";
+
+
+
 const ProfileScreen = () => {
   const { theme } = useContext(ThemeContext);
   let activeColors = colors[theme.mode];
@@ -14,12 +18,12 @@ const ProfileScreen = () => {
     <View
       style={{
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
+        // justifyContent: "center",
+        // alignItems: "center",
         backgroundColor: activeColors.primary,
       }}
     >
-      <Text
+      {/* <Text
         style={{
           fontSize: 24,
           fontWeight: "bold",
@@ -28,11 +32,14 @@ const ProfileScreen = () => {
         }}
       >
         Your cart is empty
-      </Text>
-      <TouchableOpacity
+      </Text> */}
+      <ExpandableList/>
+
+
+      {/* <TouchableOpacity
         onPress={() => navigation.navigate("Home")}
         style={{
-          backgroundColor: activeColors.accent,
+          // backgroundColor: activeColors.accent,
           paddingHorizontal: 20,
           paddingVertical: 10,
           borderRadius: 5,
@@ -40,14 +47,14 @@ const ProfileScreen = () => {
       >
         <Text
           style={{
+            marginTop: 16,
             fontSize: 16,
-            fontWeight: "bold",
-            color: activeColors.primary,
+            color: activeColors.accent,
           }}
         >
-          Explore
+          Delete Account
         </Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };

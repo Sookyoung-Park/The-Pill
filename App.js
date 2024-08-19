@@ -1,12 +1,13 @@
 import { Appearance } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
-import Footer from "./components/Footer";
 import { createStackNavigator } from "@react-navigation/stack";
-import LoginScreen from "./screens/LoginScreen";
 import { storeData, getData } from "./config/asyncStorage";
+
 import * as SplashScreen from "expo-splash-screen";
+import OnboardingScreen from "./screens/OnboardingScreen";
 import RegisterScreen from "./screens/RegisterScreen";
+import Footer from "./components/Footer";
 
 //Theme context is used to update the
 //theme of the app. It will be used in
@@ -82,7 +83,7 @@ const App = () => {
           <Stack.Screen
             options={{ headerShown: false }}
             name="Login"
-            component={LoginScreen}
+            component={OnboardingScreen}
           />
           <Stack.Screen
             options={{ headerShown: false }}

@@ -19,7 +19,7 @@ export default function Footer() {
         tabBarStyle: {
           backgroundColor: activeColors.secondary,
         },
-        headerShown: true,
+        headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
           if (route.name === "Home") {

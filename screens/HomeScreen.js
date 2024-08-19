@@ -1,7 +1,7 @@
 import React, { useContext, useState, useRef } from "react";
 import { colors } from "../config/theme";
 import { ThemeContext } from "../context/ThemeContext";
-import { View, Text, ScrollView, RefreshControl } from "react-native";
+import { View, ScrollView, RefreshControl } from "react-native";
 import { StyleSheet } from "react-native";
 import Takethepillin from "../components/sections/Takethepillin";
 import Timer from "../components/content/Timer";
@@ -59,9 +59,6 @@ const HomeScreens = () => {
               />
               <MainCalendar/>
             </View>
-          
-
-
         </ScrollView>
       </View>
     </ScrollView>
