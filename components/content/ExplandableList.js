@@ -50,7 +50,7 @@ const ExpandableList = () => {
   };
 
   return (
-    <View>
+    <View style={{marginTop:60}}>
       {SECTIONS.map((section, index) => (
         <View key={index}>
           {_renderHeader(section, index)}

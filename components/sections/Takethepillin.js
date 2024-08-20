@@ -16,11 +16,11 @@ const Takethepillin = () => {
   let activeColors = colors[theme.mode];
 
   return (
-    <View>
+    <View style={{marginTop:48,}}>
       <Text
         style={{
-          fontSize: 24,
-          fontWeight: "bold",
+          fontSize: 22,
+          fontWeight: "semibold",
           alignSelf:"center",
           marginTop: 48,
           marginBottom: 32,

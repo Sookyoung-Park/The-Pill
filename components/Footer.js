@@ -16,47 +16,54 @@ export default function Footer() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarStyle: {
-          backgroundColor: activeColors.secondary,
-        },
         headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
+          let iconSize = focused ? 26 : 24; // Active icon size larger
           if (route.name === "Home") {
             iconName = focused ? "home" : "home-outline";
-            return <Ionicons name={iconName} size={24} color={color} />;
-          } 
-          else if (route.name === "Settings") {
+          } else if (route.name === "Settings") {
             iconName = focused ? "settings" : "settings-outline";
-            return <Ionicons name={iconName} size={24} color={color} />;
-          } 
-          else if (route.name ==="Profile"){
+          } else if (route.name === "Profile") {
             iconName = focused ? "person" : "person-outline";
-            return <Ionicons name={iconName} size={24} color={color} />;
           }
 
-          // You can return any component that you like here!
-          return <Ionicons name={iconName} size={24} color={color} />;
+          return (
+            <Ionicons
+              name={iconName}
+              size={iconSize}
+              color={color}
+              style={{ transform: [{ scale: focused ? 1.05 : 1 }] }}
+            />
+          );
         },
         tabBarActiveTintColor: activeColors.accent,
         tabBarInactiveTintColor: activeColors.tertiary,
+        tabBarLabelStyle: {
+          fontSize: 10,
+          fontWeight: "semibold",
+        },
         tabBarStyle: {
           backgroundColor: activeColors.primary,
+          borderTopWidth: 0,
+          elevation: 10,
+          height: 70,
+          borderTopLeftRadius:16,
+          borderTopRightRadius:16,
+          position: "absolute",
+          shadowColor: "#575757",
+          shadowOffset: { width: 0, height: 5 },
+          shadowOpacity: 0.15,
+          shadowRadius: 10,
         },
-        headerTitleAlign: "center",
-        headerTitleStyle: {
-          fontSize: 20,
+        tabBarItemStyle: {
+          margin: 10,
         },
-        headerStyle: {
-          backgroundColor: activeColors.primary,
-        },
-        headerTintColor: activeColors.tint,
       })}
     >
-      <Tab.Screen name="Settings" component={SettingsScreen} />
       <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Settings" component={SettingsScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
-      
     </Tab.Navigator>
   );
 }

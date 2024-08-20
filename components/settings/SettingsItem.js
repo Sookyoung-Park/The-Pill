@@ -13,12 +13,12 @@ const SettingsItem = ({ children, label }) => {
     <View
       style={[
         {
-          backgroundColor: activeColors.secondary,
+          backgroundColor: activeColors.primary,
         },
         styles.settingsItem,
       ]}
     >
-      <StyledText style={[{ color: activeColors.tertiary }, styles.label]}>
+      <StyledText style={[{ color: activeColors.Text }, styles.label]}>
         {label}
       </StyledText>
       {children}
@@ -31,12 +31,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    height: 60,
-    paddingHorizontal: 25,
-    marginBottom: 2,
+    height: 48,
+    paddingHorizontal: 12,
+    marginBottom: 0,
   },
   label: {
-    fontStyle: "italic",
+    fontSize: 14,
   },
 });
 

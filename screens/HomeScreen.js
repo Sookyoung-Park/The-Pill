@@ -58,6 +58,7 @@ const HomeScreens = () => {
                 }}
               />
               <MainCalendar/>
+              <View style={{marginTop:60}}></View>
             </View>
         </ScrollView>
       </View>

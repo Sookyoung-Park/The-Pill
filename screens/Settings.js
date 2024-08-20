@@ -1,11 +1,13 @@
+// datepicker 안됨.
+
 import {
   View,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  Appearance,
   Image,
-  Text,
+  TextInput,
+  Button,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { colors } from "../config/theme";
@@ -13,38 +15,81 @@ import { ThemeContext } from "../context/ThemeContext";
 import StyledText from "../components/texts/StyledText";
 import SettingsItem from "../components/settings/SettingsItem";
 import { Ionicons } from "@expo/vector-icons";
+import {storeData, getData} from '../config/asyncStorage'
+import NumericInput from 'react-native-numeric-input'
+import FlipToggle from 'react-native-flip-toggle-button'
+import DatePicker from "react-native-date-picker";
 
 import pillimg from "../images/pillimg.png"
 import ringimg from "../images/ringimg.png"
 import patchimg from "../images/patchimg.png"
 
 const SettingsScreen = ({ navigation }) => {
-  const { theme, updateTheme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
+
   const [selectedButton, setSelectedButton] = useState(null);
+  const [settings, setSettings] = useState({
+    activePills: 21,
+    placeboPills: 7,
+    reminderTime: "2:30pm",
+    startDate: "2024-10-31",
+    takePlacebo: false,
+  });
+  const [editing, setEditing] = useState(null); // Track which field is being edited
+  const [editValue, setEditValue] = useState(0); // Temporary value holder for editing
+  const [editTakePlacebo, setEditTakePlacebo]=useState(false)
+  const [date, setDate] = useState(new Date())
+  const [open, setOpen] = useState(false)
+
   let activeColors = colors[theme.mode];
 
-  const handlePress = (index) => {
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        const storedSettings = await getData("userSettings");
+        const storedButton = await getData("selectedButton");
+
+        if (storedSettings) {
+          const startDate = new Date(storedSettings.startDate);
+          setSettings(storedSettings);
+          setDate(startDate);
+        }
+        if (storedButton !== null) {
+          setSelectedButton(parseInt(storedButton));
+        }
+      } catch (error) {
+        console.error("Failed to load settings:", error);
+      }
+    };
+
+    loadSettings();
+  }, []);
+
+  const handlePress = async (index) => {
     setSelectedButton(index);
+    await storeData("selectedButton", index.toString());
   };
 
-  //here we set the state of the switch to the current theme
-  //theme.mode is the current theme which we get from the context
-  const [isDarkTheme, setIsDarkTheme] = useState(theme.mode === "dark");
+  const handleEdit = (key) => {
+    if (key === "startDate") {
+      setOpen(true); // Open the DatePicker modal when editing the startDate
+    }
+    setEditing(key);
+    setEditValue(settings[key]);
+  };
 
-  //here we toggle the theme and update the state of the switch
-  // const toggleTheme = () => {
-  //   updateTheme();
-  //   setIsDarkTheme((prev) => !prev);
-  // };
 
-  useEffect(() => {
-    //here we listen for the color scheme change and update the state of the switch
-    //this is necessary so that the switch automatically updates
-    //when the user changes the theme from the settings
-    Appearance.addChangeListener(({ colorScheme }) => {
-      colorScheme === "dark" ? setIsDarkTheme(true) : setIsDarkTheme(false);
-    });
-  }, []);
+  const handleSave = async (key) => {
+    const updatedSettings = { ...settings, [key]: editValue };
+    setSettings(updatedSettings);
+    await storeData("userSettings", updatedSettings);
+    setEditing(null);
+  };
+
+  const formatDate = (date) => {
+    if (!date) return '';
+    return new Date(date).toLocaleDateString("en-US"); // Format the date as MM/DD/YYYY
+  };
 
   return (
     <ScrollView
@@ -55,79 +100,183 @@ const SettingsScreen = ({ navigation }) => {
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
     >
+      {/* <Button title="Save"></Button> */}
       <View style={styles.section}>
-        <StyledText style={{ color: activeColors.accent }} bold>
+        <StyledText
+          style={{ color: activeColors.accent, marginBottom: 24 }}
+          bold
+        >
           Contraception
         </StyledText>
-        
         <View style={styles.container2}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[
-              styles.contraception_button, 
-              selectedButton === 0 && styles.selectedButton
-            ]} 
-            onPress={() => handlePress(0)}>
+              styles.contraception_button,
+              selectedButton === 0 && styles.selectedButton,
+            ]}
+            onPress={() => handlePress(0)}
+          >
             <Image source={pillimg} style={styles.image} />
             <StyledText style={styles.buttonText}>Pill</StyledText>
           </TouchableOpacity>
 
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[
-              styles.contraception_button, 
-              selectedButton === 1 && styles.selectedButton
-            ]} 
-            onPress={() => handlePress(1)}>
+              styles.contraception_button,
+              selectedButton === 1 && styles.selectedButton,
+            ]}
+            onPress={() => handlePress(1)}
+          >
             <Image source={ringimg} style={styles.image} />
             <StyledText style={styles.buttonText}>Ring</StyledText>
           </TouchableOpacity>
 
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[
-              styles.contraception_button, 
-              selectedButton === 2 && styles.selectedButton
-            ]} 
-            onPress={() => handlePress(2)}>
+              styles.contraception_button,
+              selectedButton === 2 && styles.selectedButton,
+            ]}
+            onPress={() => handlePress(2)}
+          >
             <Image source={patchimg} style={styles.image} />
             <StyledText style={styles.buttonText}>Patch</StyledText>
           </TouchableOpacity>
         </View>
       </View>
-      
-
-      <StyledText style={{ color: activeColors.accent }} bold>
-        Days
-      </StyledText>
 
       <View style={styles.section}>
+        <StyledText style={{ color: activeColors.accent, marginBottom: 16 }} bold>
+          Days
+        </StyledText>
         <SettingsItem label="Active Pills">
-          <StyledText>21 days</StyledText>
+          {editing === "activePills" ? (
+            <View style={styles.editContainer}>
+              <NumericInput
+                value={editValue}
+                onChange={setEditValue}
+                totalWidth={80}
+                totalHeight={36}
+                iconSize={24}
+                step={1}
+                minValue={1}
+                maxValue={31}
+                valueType="integer"
+                rounded
+                textColor="#000"
+                iconStyle={{ color: "black" }}
+                rightButtonBackgroundColor="white"
+                leftButtonBackgroundColor="white"
+              />
+              <Button title="Save" onPress={() => handleSave("activePills")} />
+            </View>
+          ) : (
+            <TouchableOpacity onPress={() => handleEdit("activePills")}>
+              <StyledText>{settings.activePills} days</StyledText>
+            </TouchableOpacity>
+          )}
         </SettingsItem>
+
         <SettingsItem label="Do you take Placebo/Sugar Pills?">
-          <StyledText>No</StyledText>
+          {/* {editing === "takePlacebo" ? ( */}
+            <View style={styles.editContainer}>
+              <FlipToggle
+                value={editTakePlacebo}
+                buttonWidth={72}
+                buttonHeight={36}
+                buttonRadius={100}
+                sliderWidth={20}
+                sliderHeight={20}
+                sliderRadius={50}
+                onLabel={"Yes"}
+                offLabel={"No"}
+                labelStyle={{ color: 'black', fontSize: '14'}}
+                onToggle={() => setEditTakePlacebo(!editValue)}
+                onPress={() => handleSave("takePlacebo")} 
+                buttonOnColor={'#f5f5f5'}
+                buttonOffColor={'#ECECEC'}
+                sliderOnColor={'#FF1F55'}
+                sliderOffColor={'#999'}
+              />
+            </View>
         </SettingsItem>
-        <SettingsItem label="Placeo/sugar Pills">
-          <StyledText>7 days</StyledText>
+
+        <SettingsItem label="Placebo/Sugar Pills">
+          {editing === "placeboPills" ? (
+            <View style={styles.editContainer}>
+              <NumericInput
+                value={editValue}
+                onChange={setEditValue}
+                totalWidth={80}
+                totalHeight={36}
+                iconSize={24}
+                step={1}
+                minValue={1}
+                maxValue={31}
+                valueType="integer"
+                rounded
+                textColor="#000"
+                iconStyle={{ color: "black" }}
+                rightButtonBackgroundColor="white"
+                leftButtonBackgroundColor="white"
+              />
+              <Button title="Save" onPress={() => handleSave("placeboPills")} />
+            </View>
+          ) : (
+            <TouchableOpacity onPress={() => handleEdit("placeboPills")}>
+              <StyledText>{settings.placeboPills} days</StyledText>
+            </TouchableOpacity>
+          )}
         </SettingsItem>
+
         <SettingsItem label="Start Date">
-          <StyledText>October 31th, 2024</StyledText>
+          {editing === "startDate" ? (
+            <View style={styles.editContainer}>
+              <DatePicker
+                modal
+                open={open}
+                date={date}
+                onConfirm={(selectedDate) => {
+                  setDate(selectedDate);
+                  setOpen(false);
+                  handleSave("startDate");
+                }}
+                onCancel={() => {
+                  setOpen(false);
+                }}
+              />
+              <Button title="Save" onPress={() => handleSave("startDate")} />
+            </View>
+          ) : (
+            <TouchableOpacity onPress={() => handleEdit("startDate")}>
+              <StyledText>{settings.startDate}</StyledText>
+            </TouchableOpacity>
+          )}
         </SettingsItem>
       </View>
-
-
-
-      <StyledText style={{ color: activeColors.accent }} bold>
-        Reminder
-      </StyledText>
 
       <View style={styles.section}>
+        <StyledText style={{ color: activeColors.accent, marginBottom: 16 }} bold>
+          Reminder
+        </StyledText>
+
         <SettingsItem label="Push Notification Reminder">
-          <StyledText>Yes</StyledText>
-        </SettingsItem>
-        <SettingsItem label="Reminder Time">
-          <StyledText>2:30pm</StyledText>
+          {editing === "reminderTime" ? (
+            <View style={styles.editContainer}>
+              <TextInput
+                style={styles.input}
+                value={editValue}
+                onChangeText={setEditValue}
+              />
+              <Button title="Save" onPress={() => handleSave("reminderTime")} />
+            </View>
+          ) : (
+            <TouchableOpacity onPress={() => handleEdit("reminderTime")}>
+              <StyledText>{settings.reminderTime}</StyledText>
+            </TouchableOpacity>
+          )}
         </SettingsItem>
       </View>
-      
+
       <View style={styles.logout}>
         <TouchableOpacity onPress={() => navigation.navigate("Login")}>
           <SettingsItem>
@@ -143,28 +292,24 @@ const SettingsScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
-    padding: 25,
+    padding: 20,
+    paddingTop: 60,
   },
   section: {
     borderRadius: 12,
-    padding:12, 
+    padding: 12,
     overflow: "hidden",
     marginTop: 25,
     marginBottom: 25,
-    backgroundColor:"#ffffff",
-    // iOS에서 사용되는 그림자 속성
-    shadowColor: "#000", // 그림자 색상
-    shadowOffset: { width: 5, height: 5 },    // 그림자의 오프셋 (x, y)
-    shadowOpacity: 0.3,                         // 그림자의 불투명도 (0에서 1 사이)
-    shadowRadius: 10,                          // 그림자의 반경
-
-    // Android에서 사용되는 그림자 속성
-    elevation: 10,                             // Android에서의 그림자 깊이
-    
+    backgroundColor: "#ffffff",
+    shadowColor: "#000",
+    shadowOffset: { width: 5, height: 5 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 10,
   },
   logout: {
     bottom: 0,
-    // position: "absolute",
     borderRadius: 30,
     overflow: "hidden",
     marginTop: 25,
@@ -173,35 +318,33 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-
   container2: {
-    flexDirection: 'row',      // 세로 방향이 아니라 가로 방향으로 배치
-    justifyContent: 'center',  // 버튼 사이의 간격을 자동으로 균등하게 조절
-    alignItems: 'center',      // 세로로 가운데 정렬
-    marginTop:16,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   contraception_button: {
-    flex: 1,                   // 각 버튼이 같은 크기로 나눠지도록 설정
-    alignItems: 'center',
-    // backgroundColor: 'red',
+    flex: 1,
+    alignItems: "center",
     padding: 12,
-    borderWidth:1,
+    borderWidth: 1.6,
     borderColor: "#E8E8E8",
-    borderRadius:10,
-    marginHorizontal:10,
-
+    borderRadius: 10,
+    marginHorizontal: 10,
   },
-  selectedButton: {
-    borderColor: '#FF1F55', // 선택된 버튼의 borderColor
+    selectedButton: {
+    borderColor: '#FF1F55',
   },
   image: {
-    width: 72,                // 이미지 너비
-    height: 72,               // 이미지 높이
-    resizeMode: 'contain',     // 이미지 비율 유지하며 크기 조정
+    width: 60,                
+    height: 60,               
+    resizeMode: 'contain',
   },
   buttonText: {
-    marginTop: 8,                // 버튼 이미지 아래에 텍스트 간격을 설정
+    marginTop: 10,  
     textAlign: 'center',
+    color: "#000",
+    fontSize:12,
   },
 });
 
