@@ -1,5 +1,3 @@
-// datepicker 안됨.
-
 import {
   View,
   TouchableOpacity,
@@ -24,6 +22,7 @@ import pillimg from "../images/pillimg.png"
 import ringimg from "../images/ringimg.png"
 import patchimg from "../images/patchimg.png"
 
+
 const SettingsScreen = ({ navigation }) => {
   const { theme } = useContext(ThemeContext);
 
@@ -31,15 +30,16 @@ const SettingsScreen = ({ navigation }) => {
   const [settings, setSettings] = useState({
     activePills: 21,
     placeboPills: 7,
+    breakDays: 7, // 새로운 상태 추가
     reminderTime: "2:30pm",
     startDate: "2024-10-31",
     takePlacebo: false,
   });
-  const [editing, setEditing] = useState(null); // Track which field is being edited
-  const [editValue, setEditValue] = useState(0); // Temporary value holder for editing
-  const [editTakePlacebo, setEditTakePlacebo]=useState(false)
-  const [date, setDate] = useState(new Date())
-  const [open, setOpen] = useState(false)
+  const [editing, setEditing] = useState(false); 
+  const [editValues, setEditValues] = useState(settings);
+
+  const [date, setDate] = useState(new Date());
+  const [open, setOpen] = useState(false);
 
   let activeColors = colors[theme.mode];
 
@@ -52,6 +52,7 @@ const SettingsScreen = ({ navigation }) => {
         if (storedSettings) {
           const startDate = new Date(storedSettings.startDate);
           setSettings(storedSettings);
+          setEditValues(storedSettings);
           setDate(startDate);
         }
         if (storedButton !== null) {
@@ -70,25 +71,21 @@ const SettingsScreen = ({ navigation }) => {
     await storeData("selectedButton", index.toString());
   };
 
-  const handleEdit = (key) => {
-    if (key === "startDate") {
-      setOpen(true); // Open the DatePicker modal when editing the startDate
+  const handleEditToggle = () => {
+    if (editing) {
+      setSettings(editValues);
+      storeData("userSettings", editValues);
     }
-    setEditing(key);
-    setEditValue(settings[key]);
+    setEditing(!editing);
   };
 
-
-  const handleSave = async (key) => {
-    const updatedSettings = { ...settings, [key]: editValue };
-    setSettings(updatedSettings);
-    await storeData("userSettings", updatedSettings);
-    setEditing(null);
+  const handleValueChange = (key, value) => {
+    setEditValues({ ...editValues, [key]: value });
   };
 
   const formatDate = (date) => {
     if (!date) return '';
-    return new Date(date).toLocaleDateString("en-US"); // Format the date as MM/DD/YYYY
+    return new Date(date).toLocaleDateString("en-US");
   };
 
   return (
@@ -100,7 +97,15 @@ const SettingsScreen = ({ navigation }) => {
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
     >
-      {/* <Button title="Save"></Button> */}
+      <View style={styles.Edit}>
+        <TouchableOpacity onPress={handleEditToggle}>
+          <View>
+            <Ionicons name={editing ? "save-outline" : "create-outline"} size={24} color="red" />
+            <StyledText style={{ color: "red" }}>{editing ? "Save" : "Edit"}</StyledText>
+          </View>
+        </TouchableOpacity>
+      </View>
+
       <View style={styles.section}>
         <StyledText
           style={{ color: activeColors.accent, marginBottom: 24 }}
@@ -115,6 +120,7 @@ const SettingsScreen = ({ navigation }) => {
               selectedButton === 0 && styles.selectedButton,
             ]}
             onPress={() => handlePress(0)}
+            disabled={!editing}
           >
             <Image source={pillimg} style={styles.image} />
             <StyledText style={styles.buttonText}>Pill</StyledText>
@@ -126,6 +132,7 @@ const SettingsScreen = ({ navigation }) => {
               selectedButton === 1 && styles.selectedButton,
             ]}
             onPress={() => handlePress(1)}
+            disabled={!editing}
           >
             <Image source={ringimg} style={styles.image} />
             <StyledText style={styles.buttonText}>Ring</StyledText>
@@ -137,6 +144,7 @@ const SettingsScreen = ({ navigation }) => {
               selectedButton === 2 && styles.selectedButton,
             ]}
             onPress={() => handlePress(2)}
+            disabled={!editing}
           >
             <Image source={patchimg} style={styles.image} />
             <StyledText style={styles.buttonText}>Patch</StyledText>
@@ -149,63 +157,58 @@ const SettingsScreen = ({ navigation }) => {
           Days
         </StyledText>
         <SettingsItem label="Active Pills">
-          {editing === "activePills" ? (
-            <View style={styles.editContainer}>
-              <NumericInput
-                value={editValue}
-                onChange={setEditValue}
-                totalWidth={80}
-                totalHeight={36}
-                iconSize={24}
-                step={1}
-                minValue={1}
-                maxValue={31}
-                valueType="integer"
-                rounded
-                textColor="#000"
-                iconStyle={{ color: "black" }}
-                rightButtonBackgroundColor="white"
-                leftButtonBackgroundColor="white"
-              />
-              <Button title="Save" onPress={() => handleSave("activePills")} />
-            </View>
+          {editing ? (
+            <NumericInput
+              value={editValues.activePills}
+              onChange={(value) => handleValueChange("activePills", value)}
+              totalWidth={80}
+              totalHeight={36}
+              iconSize={24}
+              step={1}
+              minValue={1}
+              maxValue={31}
+              valueType="integer"
+              rounded
+              textColor="#000"
+              iconStyle={{ color: "black" }}
+              rightButtonBackgroundColor="white"
+              leftButtonBackgroundColor="white"
+            />
           ) : (
-            <TouchableOpacity onPress={() => handleEdit("activePills")}>
-              <StyledText>{settings.activePills} days</StyledText>
-            </TouchableOpacity>
+            <StyledText>{settings.activePills} days</StyledText>
           )}
         </SettingsItem>
 
         <SettingsItem label="Do you take Placebo/Sugar Pills?">
-          {/* {editing === "takePlacebo" ? ( */}
-            <View style={styles.editContainer}>
-              <FlipToggle
-                value={editTakePlacebo}
-                buttonWidth={72}
-                buttonHeight={36}
-                buttonRadius={100}
-                sliderWidth={20}
-                sliderHeight={20}
-                sliderRadius={50}
-                onLabel={"Yes"}
-                offLabel={"No"}
-                labelStyle={{ color: 'black', fontSize: '14'}}
-                onToggle={() => setEditTakePlacebo(!editValue)}
-                onPress={() => handleSave("takePlacebo")} 
-                buttonOnColor={'#f5f5f5'}
-                buttonOffColor={'#ECECEC'}
-                sliderOnColor={'#FF1F55'}
-                sliderOffColor={'#999'}
-              />
-            </View>
+          {editing ? (
+            <FlipToggle
+              value={editValues.takePlacebo}
+              buttonWidth={72}
+              buttonHeight={36}
+              buttonRadius={100}
+              sliderWidth={20}
+              sliderHeight={20}
+              sliderRadius={50}
+              onLabel={"Yes"}
+              offLabel={"No"}
+              labelStyle={{ color: 'black', fontSize: '14'}}
+              onToggle={(value) => handleValueChange("takePlacebo", value)}
+              buttonOnColor={'#f5f5f5'}
+              buttonOffColor={'#ECECEC'}
+              sliderOnColor={'#FF1F55'}
+              sliderOffColor={'#999'}
+            />
+          ) : (
+            <StyledText>{settings.takePlacebo ? "Yes" : "No"}</StyledText>
+          )}
         </SettingsItem>
 
-        <SettingsItem label="Placebo/Sugar Pills">
-          {editing === "placeboPills" ? (
-            <View style={styles.editContainer}>
+        {editValues.takePlacebo ? (
+          <SettingsItem label="Placebo(Sugar)">
+            {editing ? (
               <NumericInput
-                value={editValue}
-                onChange={setEditValue}
+                value={editValues.placeboPills}
+                onChange={(value) => handleValueChange("placeboPills", value)}
                 totalWidth={80}
                 totalHeight={36}
                 iconSize={24}
@@ -219,37 +222,54 @@ const SettingsScreen = ({ navigation }) => {
                 rightButtonBackgroundColor="white"
                 leftButtonBackgroundColor="white"
               />
-              <Button title="Save" onPress={() => handleSave("placeboPills")} />
-            </View>
-          ) : (
-            <TouchableOpacity onPress={() => handleEdit("placeboPills")}>
+            ) : (
               <StyledText>{settings.placeboPills} days</StyledText>
-            </TouchableOpacity>
-          )}
-        </SettingsItem>
-
-        <SettingsItem label="Start Date">
-          {editing === "startDate" ? (
-            <View style={styles.editContainer}>
-              <DatePicker
-                modal
-                open={open}
-                date={date}
-                onConfirm={(selectedDate) => {
-                  setDate(selectedDate);
-                  setOpen(false);
-                  handleSave("startDate");
-                }}
-                onCancel={() => {
-                  setOpen(false);
-                }}
+            )}
+          </SettingsItem>
+        ) : (
+          <SettingsItem label="Break days">
+            {editing ? (
+              <NumericInput
+                value={editValues.breakDays}
+                onChange={(value) => handleValueChange("breakDays", value)}
+                totalWidth={80}
+                totalHeight={36}
+                iconSize={24}
+                step={1}
+                minValue={1}
+                maxValue={31}
+                valueType="integer"
+                rounded
+                textColor="#000"
+                iconStyle={{ color: "black" }}
+                rightButtonBackgroundColor="white"
+                leftButtonBackgroundColor="white"
               />
-              <Button title="Save" onPress={() => handleSave("startDate")} />
-            </View>
+            ) : (
+              <StyledText>{settings.breakDays} days</StyledText>
+            )}
+          </SettingsItem>
+        )}
+        <SettingsItem label="Starting Date">
+          {editing ? (
+            <NumericInput
+              value={editValues.activePills}
+              onChange={(value) => handleValueChange("activePills", value)}
+              totalWidth={80}
+              totalHeight={36}
+              iconSize={24}
+              step={1}
+              minValue={1}
+              maxValue={31}
+              valueType="integer"
+              rounded
+              textColor="#000"
+              iconStyle={{ color: "black" }}
+              rightButtonBackgroundColor="white"
+              leftButtonBackgroundColor="white"
+            />
           ) : (
-            <TouchableOpacity onPress={() => handleEdit("startDate")}>
-              <StyledText>{settings.startDate}</StyledText>
-            </TouchableOpacity>
+            <StyledText>{settings.activePills} days</StyledText>
           )}
         </SettingsItem>
       </View>
@@ -260,19 +280,14 @@ const SettingsScreen = ({ navigation }) => {
         </StyledText>
 
         <SettingsItem label="Push Notification Reminder">
-          {editing === "reminderTime" ? (
-            <View style={styles.editContainer}>
-              <TextInput
-                style={styles.input}
-                value={editValue}
-                onChangeText={setEditValue}
-              />
-              <Button title="Save" onPress={() => handleSave("reminderTime")} />
-            </View>
+          {editing ? (
+            <TextInput
+              style={styles.input}
+              value={editValues.reminderTime}
+              onChangeText={(value) => handleValueChange("reminderTime", value)}
+            />
           ) : (
-            <TouchableOpacity onPress={() => handleEdit("reminderTime")}>
-              <StyledText>{settings.reminderTime}</StyledText>
-            </TouchableOpacity>
+            <StyledText>{settings.reminderTime}</StyledText>
           )}
         </SettingsItem>
       </View>
@@ -297,10 +312,10 @@ const styles = StyleSheet.create({
   },
   section: {
     borderRadius: 12,
-    padding: 12,
+    padding: 0,
     overflow: "hidden",
     marginTop: 25,
-    marginBottom: 25,
+    marginBottom: 32,
     backgroundColor: "#ffffff",
     shadowColor: "#000",
     shadowOffset: { width: 5, height: 5 },

@@ -5,8 +5,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { storeData, getData } from "./config/asyncStorage";
 
 import * as SplashScreen from "expo-splash-screen";
-import OnboardingScreen from "./screens/OnboardingScreen";
-import RegisterScreen from "./screens/RegisterScreen";
 import Footer from "./components/Footer";
 
 //Theme context is used to update the
@@ -80,16 +78,11 @@ const App = () => {
     <ThemeContext.Provider value={{ theme, updateTheme }}>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Login">
-          <Stack.Screen
+          {/* <Stack.Screen
             options={{ headerShown: false }}
             name="Login"
             component={OnboardingScreen}
-          />
-          <Stack.Screen
-            options={{ headerShown: false }}
-            name="Register"
-            component={RegisterScreen}
-          />
+          /> */}
           <Stack.Screen
             name="Footer"
             component={Footer}

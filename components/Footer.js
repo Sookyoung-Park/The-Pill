@@ -20,11 +20,13 @@ export default function Footer() {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
           let iconSize = focused ? 26 : 24; // Active icon size larger
-          if (route.name === "Home") {
-            iconName = focused ? "home" : "home-outline";
-          } else if (route.name === "Settings") {
+          if (route.name === "Settings") {
             iconName = focused ? "settings" : "settings-outline";
-          } else if (route.name === "Profile") {
+          } 
+          else if (route.name === "Home") {
+            iconName = focused ? "home" : "home-outline";
+          } 
+          else if (route.name === "Profile") {
             iconName = focused ? "person" : "person-outline";
           }
 
@@ -61,8 +63,8 @@ export default function Footer() {
         },
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
+      <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );

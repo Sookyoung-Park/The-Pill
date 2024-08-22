@@ -29,20 +29,10 @@ const OnboardingScreen = ({ navigation }) => {
               height: 200,
               width: 300,
               transform: [{ rotate: "-5deg" }],
+              marginBottom: 60,
             }}
           />
         </View>
-
-        <Text
-          style={{
-            fontSize: 28,
-            fontWeight: "500",
-            color: activeColors.tint,
-            marginBottom: 30,
-          }}
-        >
-          Let's Start!
-        </Text>
 
         <CustomButton
           label={"Start"}
