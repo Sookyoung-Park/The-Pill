@@ -33,7 +33,7 @@ const SettingsScreen = ({ navigation }) => {
     placeboPills: 7,
     breakDays: 7, // 새로운 상태 추가
     reminderTime: "2:30pm",
-    startDate: "2024-10-31",
+    startDate: "2024-08-29T08:20:00.000Z",
     takePlacebo: false,
   });
   const [editing, setEditing] = useState(false); 
@@ -88,6 +88,8 @@ const SettingsScreen = ({ navigation }) => {
     if (!date) return '';
     return new Date(date).toLocaleDateString("en-US");
   };
+
+  console.log("date", date);
 
   return (
     <ScrollView
@@ -270,46 +272,12 @@ const SettingsScreen = ({ navigation }) => {
       }}
     />
     </View>
-
-            {/* <DatePicker
-              modal
-              open={open}
-              style={{width: 320, backgroundColor: "white"}}
-              date={new Date(editValues.startDate)} // 현재 선택된 날짜를 초기값으로 설정
-              onConfirm={(selectedDate) => {
-                setOpen(false);
-                handleValueChange("startDate", selectedDate.toISOString().split("T")[0]); // 선택된 날짜를 ISO 형식으로 저장
-              }}
-              onCancel={() => {
-                setOpen(false);
-              }}
-              mode="date" // 날짜 선택 모드
-            /> */}
-          </View>
-        ) : (
-          <StyledText>{formatDate(settings.startDate)}</StyledText>
-        )}
-          {/* {editing ? (
-            <NumericInput
-              value={editValues.activePills}
-              onChange={(value) => handleValueChange("activePills", value)}
-              totalWidth={80}
-              totalHeight={36}
-              iconSize={24}
-              step={1}
-              minValue={1}
-              maxValue={31}
-              valueType="integer"
-              rounded
-              textColor="#000"
-              iconStyle={{ color: "black" }}
-              rightButtonBackgroundColor="white"
-              leftButtonBackgroundColor="white"
-            />
-          ) : (
-            <StyledText>{settings.activePills} days</StyledText>
-          )} */}
-        </SettingsItem>
+    </View>
+  ) : (
+    // <StyledText>{formatDate(settings.startDate)}</StyledText>
+    <StyledText>{formatDate(date)}</StyledText>
+  )}
+  </SettingsItem>
       </View>
 
       <View style={styles.section}>
