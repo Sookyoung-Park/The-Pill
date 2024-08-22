@@ -16,6 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 import {storeData, getData} from '../config/asyncStorage'
 import NumericInput from 'react-native-numeric-input'
 import FlipToggle from 'react-native-flip-toggle-button'
+// import DatePicker from "react-native-date-picker";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import pillimg from "../images/pillimg.png"
@@ -258,16 +259,16 @@ const SettingsScreen = ({ navigation }) => {
             </TouchableOpacity>
             <View>
       {/* <Button title="Open DatePicker" onPress={() => setOpen(true)} /> */}
-      <DateTimePicker
-        // value={date}
-        value={isNaN(date.getTime()) ? new Date() : date}
-        mode="date"
-        display="default"
-        onChange={(event, selectedDate) => {
-          const currentDate = selectedDate || date;
-          setDate(currentDate);
-        }}
-      />
+    <DateTimePicker
+      // value={date}
+      value={isNaN(date.getTime()) ? new Date() : date}
+      mode="date"
+      display="default"
+      onChange={(event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        setDate(currentDate);
+      }}
+    />
     </View>
 
             {/* <DatePicker
