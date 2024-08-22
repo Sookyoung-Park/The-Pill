@@ -16,7 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 import {storeData, getData} from '../config/asyncStorage'
 import NumericInput from 'react-native-numeric-input'
 import FlipToggle from 'react-native-flip-toggle-button'
-import DatePicker from "react-native-date-picker";
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 import pillimg from "../images/pillimg.png"
 import ringimg from "../images/ringimg.png"
@@ -251,7 +251,44 @@ const SettingsScreen = ({ navigation }) => {
           </SettingsItem>
         )}
         <SettingsItem label="Starting Date">
-          {editing ? (
+        {editing ? (
+          <View>
+            <TouchableOpacity onPress={() => setOpen(true)}>
+              <StyledText>{formatDate(editValues.startDate)}</StyledText>
+            </TouchableOpacity>
+            <View>
+      {/* <Button title="Open DatePicker" onPress={() => setOpen(true)} /> */}
+      <DateTimePicker
+        // value={date}
+        value={isNaN(date.getTime()) ? new Date() : date}
+        mode="date"
+        display="default"
+        onChange={(event, selectedDate) => {
+          const currentDate = selectedDate || date;
+          setDate(currentDate);
+        }}
+      />
+    </View>
+
+            {/* <DatePicker
+              modal
+              open={open}
+              style={{width: 320, backgroundColor: "white"}}
+              date={new Date(editValues.startDate)} // 현재 선택된 날짜를 초기값으로 설정
+              onConfirm={(selectedDate) => {
+                setOpen(false);
+                handleValueChange("startDate", selectedDate.toISOString().split("T")[0]); // 선택된 날짜를 ISO 형식으로 저장
+              }}
+              onCancel={() => {
+                setOpen(false);
+              }}
+              mode="date" // 날짜 선택 모드
+            /> */}
+          </View>
+        ) : (
+          <StyledText>{formatDate(settings.startDate)}</StyledText>
+        )}
+          {/* {editing ? (
             <NumericInput
               value={editValues.activePills}
               onChange={(value) => handleValueChange("activePills", value)}
@@ -270,7 +307,7 @@ const SettingsScreen = ({ navigation }) => {
             />
           ) : (
             <StyledText>{settings.activePills} days</StyledText>
-          )}
+          )} */}
         </SettingsItem>
       </View>
 
