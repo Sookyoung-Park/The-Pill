@@ -82,6 +82,14 @@ const SettingsScreen = ({ navigation }) => {
     setEditValues({ ...editValues, [key]: value });
   };
 
+  // 날짜를 선택할 때 값을 업데이트하고 저장하는 부분
+const handleDateChange = (event, selectedDate) => {
+  const currentDate = selectedDate || date;
+  setDate(currentDate);
+  handleValueChange("startDate", currentDate.toISOString()); // ISO 형식으로 저장
+};
+
+
   const formatDate = (date) => {
     if (!date) return '';
     return new Date(date).toLocaleDateString("en-US");
@@ -100,9 +108,9 @@ const SettingsScreen = ({ navigation }) => {
     >
       <View style={styles.Edit}>
         <TouchableOpacity onPress={handleEditToggle}>
-          <View>
-            <Ionicons name={editing ? "save-outline" : "create-outline"} size={24} color="red" />
-            <StyledText style={{ color: "red" }}>{editing ? "Save" : "Edit"}</StyledText>
+          <View style={styles.editButtonContainer}>
+            <Ionicons name={editing ? "save-outline" : "create-outline"} size={24} color="#111827" />
+            <StyledText style={styles.editButtonText}>{editing ? "Save" : "Edit"}</StyledText>
           </View>
         </TouchableOpacity>
       </View>
@@ -252,30 +260,27 @@ const SettingsScreen = ({ navigation }) => {
           </SettingsItem>
         )}
         <SettingsItem label="Starting Date">
-        {editing ? (
-          <View>
-            <TouchableOpacity onPress={() => setOpen(true)}>
-              <StyledText>{formatDate(editValues.startDate)}</StyledText>
-            </TouchableOpacity>
+          {editing ? (
             <View>
-      {/* <Button title="Open DatePicker" onPress={() => setOpen(true)} /> */}
-    <DateTimePicker
-      // value={date}
-      value={isNaN(date.getTime()) ? new Date() : date}
-      mode="date"
-      display="default"
-      onChange={(event, selectedDate) => {
-        const currentDate = selectedDate || date;
-        setDate(currentDate);
-      }}
-    />
-    </View>
-    </View>
-  ) : (
-    // <StyledText>{formatDate(settings.startDate)}</StyledText>
-    <StyledText>{formatDate(date)}</StyledText>
-  )}
-  </SettingsItem>
+              <TouchableOpacity onPress={() => setOpen(true)}>
+                <StyledText>{formatDate(editValues.startDate)}</StyledText>
+              </TouchableOpacity>
+              <View>
+                <DateTimePicker
+                  value={isNaN(date.getTime()) ? new Date() : date}
+                  mode="date"
+                  display="default"
+                  onChange={(event, selectedDate) => {
+                    const currentDate = selectedDate || date;
+                    setDate(currentDate);
+                  }}
+                />
+              </View>
+            </View>
+          ) : (
+            <StyledText>{formatDate(date)}</StyledText>
+          )}
+        </SettingsItem>
       </View>
 
       <View style={styles.section}>
@@ -306,7 +311,7 @@ const SettingsScreen = ({ navigation }) => {
       </View>
     </ScrollView>
   );
-};
+  }
 
 const styles = StyleSheet.create({
   Container: {
@@ -351,8 +356,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginHorizontal: 10,
   },
-    selectedButton: {
+  selectedButton: {
     borderColor: '#FF1F55',
+  },
+  contraceptionContent: {
+    flexDirection: 'column',
+    justifyContent: 'center',   // Vertically center content
+    alignItems: 'center',       // Horizontally center content
   },
   image: {
     width: 60,                
@@ -363,8 +373,80 @@ const styles = StyleSheet.create({
     marginTop: 10,  
     textAlign: 'center',
     color: "#000",
-    fontSize:12,
+    fontSize: 12,
+  },
+  editButtonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    marginTop:20,
+    
+  },
+  editButtonText: {
+    marginLeft: 8,
+    color: "#111827",
   },
 });
 
 export default SettingsScreen;
+
+// const styles = StyleSheet.create({
+//   Container: {
+//     flex: 1,
+//     padding: 20,
+//     paddingTop: 60,
+//   },
+//   section: {
+//     borderRadius: 12,
+//     padding: 0,
+//     overflow: "hidden",
+//     marginTop: 25,
+//     marginBottom: 32,
+//     backgroundColor: "#ffffff",
+//     shadowColor: "#000",
+//     shadowOffset: { width: 5, height: 5 },
+//     shadowOpacity: 0.3,
+//     shadowRadius: 10,
+//     elevation: 10,
+//   },
+//   logout: {
+//     bottom: 0,
+//     borderRadius: 30,
+//     overflow: "hidden",
+//     marginTop: 25,
+//     alignSelf: "center",
+//     marginBottom: 25,
+//     justifyContent: "center",
+//     alignItems: "center",
+//   },
+//   container2: {
+//     flexDirection: "row",
+//     justifyContent: "center",
+//     alignItems: "center",
+//   },
+//   contraception_button: {
+//     flex: 1,
+//     alignItems: "center",
+//     padding: 12,
+//     borderWidth: 1.6,
+//     borderColor: "#E8E8E8",
+//     borderRadius: 10,
+//     marginHorizontal: 10,
+//   },
+//     selectedButton: {
+//     borderColor: '#FF1F55',
+//   },
+//   image: {
+//     width: 60,                
+//     height: 60,               
+//     resizeMode: 'contain',
+//   },
+//   buttonText: {
+//     marginTop: 10,  
+//     textAlign: 'center',
+//     color: "#000",
+//     fontSize:12,
+//   },
+// });
+
+// export default SettingsScreen;
