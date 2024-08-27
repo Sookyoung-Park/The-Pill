@@ -18,43 +18,10 @@ const ProfileScreen = () => {
     <View
       style={{
         flex: 1,
-        // justifyContent: "center",
-        // alignItems: "center",
         backgroundColor: activeColors.primary,
       }}
     >
-      {/* <Text
-        style={{
-          fontSize: 24,
-          fontWeight: "bold",
-          color: activeColors.tertiary,
-          marginBottom: 20,
-        }}
-      >
-        Your cart is empty
-      </Text> */}
       <ExpandableList/>
-
-
-      {/* <TouchableOpacity
-        onPress={() => navigation.navigate("Home")}
-        style={{
-          // backgroundColor: activeColors.accent,
-          paddingHorizontal: 20,
-          paddingVertical: 10,
-          borderRadius: 5,
-        }}
-      >
-        <Text
-          style={{
-            marginTop: 16,
-            fontSize: 16,
-            color: activeColors.accent,
-          }}
-        >
-          Delete Account
-        </Text>
-      </TouchableOpacity> */}
     </View>
   );
 };

@@ -49,7 +49,7 @@ export default function Footer() {
           backgroundColor: activeColors.primary,
           borderTopWidth: 0,
           elevation: 10,
-          height: 70,
+          height: 60,
           borderTopLeftRadius:16,
           borderTopRightRadius:16,
           position: "absolute",

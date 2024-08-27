@@ -5,15 +5,15 @@ import Collapsible from 'react-native-collapsible';
 const SECTIONS = [
   {
     title: 'Subscription',
-    content: 'Lorem ipsum...',
+    content: 'It is free app. Dedicate for the women in the world',
   },
   {
     title: 'Customer Service',
-    content: 'Lorem ipsum...',
+    content: 'Please contact to parksk1031@gmail.com to any feedback or helps',
   },
   {
     title: 'Review',
-    content: 'Lorem ipsum...',
+    content: 'Please review our app for the better experience',
   },
 ];
 

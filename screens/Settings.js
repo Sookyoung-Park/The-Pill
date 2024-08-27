@@ -5,7 +5,6 @@ import {
   ScrollView,
   Image,
   TextInput,
-  Button,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { colors } from "../config/theme";
@@ -16,7 +15,6 @@ import { Ionicons } from "@expo/vector-icons";
 import {storeData, getData} from '../config/asyncStorage'
 import NumericInput from 'react-native-numeric-input'
 import FlipToggle from 'react-native-flip-toggle-button'
-// import DatePicker from "react-native-date-picker";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import pillimg from "../images/pillimg.png"

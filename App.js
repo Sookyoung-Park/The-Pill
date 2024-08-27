@@ -78,11 +78,6 @@ const App = () => {
     <ThemeContext.Provider value={{ theme, updateTheme }}>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Login">
-          {/* <Stack.Screen
-            options={{ headerShown: false }}
-            name="Login"
-            component={OnboardingScreen}
-          /> */}
           <Stack.Screen
             name="Footer"
             component={Footer}
